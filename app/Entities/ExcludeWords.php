@@ -2,7 +2,8 @@
 
 namespace App\Entities;
 
-class ExcludeWords {
+class ExcludeWords 
+{
     private $words = [];
     private $excludes = ['a'];
 

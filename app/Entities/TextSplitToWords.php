@@ -2,20 +2,26 @@
 
 namespace App\Entities;
 
-class TextSplitToWords {
-    private $text = null;
-    private $wordSplitCount = 1;
-    private $separator = ' ';
+use Contracts\ReaderInterface;
 
-    public function __construct(string $text, int $wordSplitCount = 1)
+class TextSplitToWords 
+{
+    private string $text = null;
+    private int $wordSplitCount = 1;
+    private string $separator = ' ';
+
+    private ReaderInterface $reader = null;
+
+    public function __construct(ReaderInterface $reader, int $wordSplitCount = 1)
     {
-        $this->text = $text;
+        $this->reader = $reader;
         $this->wordSplitCount = $wordSplitCount;
     }
 
     public function splitWords(): array
     {
-        $text = $this->normalizeText($this->text);
+        $text = $reader->read();
+        $text = $this->normalizeText($text);
 
         $words = explode($this->separator, $text);
 
