@@ -2,31 +2,36 @@
 
 namespace App\Services;
 
-use App\Services\ReadText;
+use App\Contracts\ReaderInterface;
 use App\Entities\TextSplitToWords;
 use App\Entities\ExcludeWords;
 
 class ExplodeText
 {
-	public function __construct()
+	public array $words = [];
+	public ReaderInterface $reader;
+
+	public function __construct(ReaderInterface $reader)
 	{
-		// code...
+		$this->reader = $reader;
 	}
 
 	public function explode(): array
 	{
-		$reader = new ReadText();
+		$textSpliter = new TextSplitToWords($this->reader, 1);
 
-		$textSpliter = new TextSplitToWords($reader, 1);
+		$this->words = $textSpliter->splitWords();
 
-		$words = $textSpliter->splitWords();
+		return $this->words;
 	}
 
 	// Exclude learned words from array words.
-	public function exclude(array $words = []): array
+	public function exclude(array $excludeWords = []): array
 	{
-		$wordsExcluder = new ExcludeWords($words);
+		$wordsExcluder = new ExcludeWords($this->words);
 
-		return $wordsExcluder->exclude();
+		$this->words = $wordsExcluder->exclude($excludeWords);
+
+		return $this->words;
 	}
 }

@@ -2,15 +2,15 @@
 
 namespace App\Entities;
 
-use Contracts\ReaderInterface;
+use App\Contracts\ReaderInterface;
 
 class TextSplitToWords 
 {
-    private string $text = null;
+    private string $text = '';
     private int $wordSplitCount = 1;
     private string $separator = ' ';
 
-    private ReaderInterface $reader = null;
+    private ReaderInterface $reader;
 
     public function __construct(ReaderInterface $reader, int $wordSplitCount = 1)
     {
@@ -20,7 +20,7 @@ class TextSplitToWords
 
     public function splitWords(): array
     {
-        $text = $reader->read();
+        $text = $this->reader->read();
         $text = $this->normalizeText($text);
 
         $words = explode($this->separator, $text);
